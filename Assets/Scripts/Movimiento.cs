@@ -13,6 +13,8 @@ public class Movimiento : MonoBehaviour
     private float valX;
     private float valZ;
 
+    int contadorSuelosSeguidos = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +34,41 @@ public class Movimiento : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
+
+    private void OnCollisionExit(Collision other)
+    {
+        if (other.gameObject.tag == "suelo")
+        {
+            if (contadorSuelosSeguidos == 0)
+            {
+                //Obtenemos un numero aleatorio entre 0 y 2
+                int num = Random.Range(0, 3);
+                //Segun el numero aleatorio, cambiamos la posicion del suelo
+                switch (num)
+                {
+                    case 0:
+                        valX -= 6.0f;
+                        valZ -= 6.0f;
+                        break;
+                    case 1:
+                        valX += 6.0f;
+                        valZ -= 6.0f;
+                        break;
+                    case 2:
+                        valX = 0.0f;
+                        break;
+                }
+                contadorSuelosSeguidos = 3;
+            }
+            contadorSuelosSeguidos--;
+            valZ += 6.0f;
+            GameObject elSuelo = Instantiate(prefabSuelo, new Vector3(valX, 0.0f, valZ), Quaternion.identity) as GameObject;
+            other.gameObject.GetComponent<Rigidbody>().useGravity = true;
+            other.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+            Destroy(other.gameObject, 2.0f);
+        }
+    }
+
 }
