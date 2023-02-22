@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Pulsar : MonoBehaviour
 {
@@ -47,7 +48,10 @@ public class Pulsar : MonoBehaviour
                 contar = false;
                 numero--;
             }
+            
         }
+        if (numero == 0)
+            SceneManager.LoadScene("Nivel1", LoadSceneMode.Single);
     }
 
     IEnumerator Esperar() // corrutina
