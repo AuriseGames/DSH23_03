@@ -46,11 +46,11 @@ public class Movimiento : MonoBehaviour
     {
         camara.transform.position = this.transform.position + offset;
 
-        if(Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetKeyUp(KeyCode.Space))
         {
-            if(direccionActual == Vector3.forward)
+            if (direccionActual == Vector3.forward)
                 direccionActual = Vector3.right;
-            
+
             else
                 direccionActual = Vector3.forward;
         }
@@ -67,25 +67,22 @@ public class Movimiento : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other) {
+    private void OnTriggerExit(Collider other)
+    {
         if (other.gameObject.tag == "suelo")
         {
             velocidad += 0.1f;
-            if (contadorSuelosSeguidos == 0)
+            //Obtenemos un numero aleatorio entre 0 y 2
+            int num = Random.Range(0, 2);
+            //Segun el numero aleatorio, cambiamos la posicion del suelo
+            switch (num)
             {
-                //Obtenemos un numero aleatorio entre 0 y 2
-                int num = Random.Range(0, 2);
-                //Segun el numero aleatorio, cambiamos la posicion del suelo
-                switch (num)
-                {
-                    case 0:
-                        valX += 6.0f;
-                        valZ -= 6.0f;
-                        break;
-                    case 1:
-                        break;
-                }
-                contadorSuelosSeguidos = 3;
+                case 0:
+                    valX += 6.0f;
+                    valZ -= 6.0f;
+                    break;
+                case 1:
+                    break;
             }
             contadorSuelosSeguidos--;
             valZ += 6.0f;
