@@ -6,7 +6,7 @@ public class Movimiento : MonoBehaviour
 {
 
     public Camera camara;
-    public int velocidad;
+    public float velocidad;
     public GameObject prefabSuelo;
 
     private Vector3 offset;
@@ -15,11 +15,15 @@ public class Movimiento : MonoBehaviour
     private Rigidbody rb;
     private Vector3 direccionActual;
 
+    private bool start;
+
     int contadorSuelosSeguidos = 0;
 
     // Start is called before the first frame update
     void Start()
     {
+        start = false;
+        velocidad = 0f;
         offset = camara.transform.position;
         valX = 0.0f;
         valZ = 0.0f;
@@ -30,7 +34,7 @@ public class Movimiento : MonoBehaviour
 
     void SueloInicial()
     {
-        for (int n = 0; n < 3; n++)
+        for (int n = 0; n < 10; n++)
         {
             valZ += 6.0f;
             GameObject elSuelo = Instantiate(prefabSuelo, new Vector3(valX, 0.0f, valZ), Quaternion.identity) as GameObject;
@@ -54,27 +58,31 @@ public class Movimiento : MonoBehaviour
         rb.transform.Translate(direccionActual * tiempo);
     }
 
-    private void OnCollisionExit(Collision other)
+    private void OnCollisionEnter(Collision other)
     {
+        if (!start && other.gameObject.tag == "suelo")
+        {
+            velocidad = 10f;
+            start = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other) {
         if (other.gameObject.tag == "suelo")
         {
+            velocidad += 0.1f;
             if (contadorSuelosSeguidos == 0)
             {
                 //Obtenemos un numero aleatorio entre 0 y 2
-                int num = Random.Range(0, 3);
+                int num = Random.Range(0, 2);
                 //Segun el numero aleatorio, cambiamos la posicion del suelo
                 switch (num)
                 {
                     case 0:
-                        valX -= 6.0f;
-                        valZ -= 6.0f;
-                        break;
-                    case 1:
                         valX += 6.0f;
                         valZ -= 6.0f;
                         break;
-                    case 2:
-                        valX = 0.0f;
+                    case 1:
                         break;
                 }
                 contadorSuelosSeguidos = 3;
@@ -87,5 +95,4 @@ public class Movimiento : MonoBehaviour
             Destroy(other.gameObject, 2.0f);
         }
     }
-
 }
