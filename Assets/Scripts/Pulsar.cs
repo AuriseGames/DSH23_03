@@ -24,7 +24,7 @@ public class Pulsar : MonoBehaviour
         boton = GameObject.FindWithTag("botonpulsar").GetComponent<Button>();
         boton.onClick.AddListener(Pulsado); // manejo de eventos de pulsar
     }
-    
+
     void Pulsado()
     {
         Debug.Log("Pulsado");
@@ -32,7 +32,7 @@ public class Pulsar : MonoBehaviour
         texto.gameObject.SetActive(true);
         boton.gameObject.SetActive(false);
         contar = true;
-        
+
     }
 
     // Update is called once per frame
@@ -40,18 +40,23 @@ public class Pulsar : MonoBehaviour
     {
         if (contar)
         {
-            if(numero > 0)
+            if (numero > 0)
             {
-                imagen.sprite = spNumeros[numero-1];
-                texto.text = textos[numero-1];
+                imagen.sprite = spNumeros[numero - 1];
+                texto.text = textos[numero - 1];
                 StartCoroutine("Esperar");
                 contar = false;
                 numero--;
             }
-            
+            else if (numero == 0)
+            {
+                StartCoroutine("Esperar");
+                contar = false;
+                SceneManager.LoadScene("Nivel1", LoadSceneMode.Single);
+            }
         }
-        if (numero == 0)
-            SceneManager.LoadScene("Nivel1", LoadSceneMode.Single);
+
+
     }
 
     IEnumerator Esperar() // corrutina
