@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Muerte : MonoBehaviour
 {
@@ -32,7 +33,15 @@ public class Muerte : MonoBehaviour
             player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
             player.GetComponent<MeshRenderer>().enabled = false;
             trail.SetActive(false);
+            if (muerto){
+                StartCoroutine("WaitASecond");
+            }
         }
+    }
+    IEnumerator WaitASecond()
+    {
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene("GameOver");
     }
 
     void OnTriggerEnter(Collider other)

@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Movimiento : MonoBehaviour
 {
 
     public Camera camara;
     public float velocidad;
+    public float puntos;
     public GameObject prefabSuelo;
 
     private Vector3 offset;
@@ -14,6 +17,7 @@ public class Movimiento : MonoBehaviour
     private float valZ;
     private Rigidbody rb;
     private Vector3 direccionActual;
+    public Text texto;
 
     private bool start;
 
@@ -45,7 +49,7 @@ public class Movimiento : MonoBehaviour
     void Update()
     {
         camara.transform.position = this.transform.position + offset;
-
+        UpdatePuntos();
         if (Input.GetKeyUp(KeyCode.Space))
         {
             if (direccionActual == Vector3.forward)
@@ -65,6 +69,14 @@ public class Movimiento : MonoBehaviour
             velocidad = 10f;
             start = true;
         }
+    }
+
+
+
+    private void UpdatePuntos()
+    {
+        puntos+=Time.deltaTime;
+        texto.text = "Puntos: " + puntos.ToString("0");
     }
 
     private void OnTriggerExit(Collider other)
@@ -90,6 +102,8 @@ public class Movimiento : MonoBehaviour
             other.gameObject.GetComponent<Rigidbody>().useGravity = true;
             other.gameObject.GetComponent<Rigidbody>().isKinematic = false;
             Destroy(other.gameObject, 2.0f);
+            
         }
     }
+
 }
