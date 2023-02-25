@@ -76,7 +76,8 @@ public class Movimiento : MonoBehaviour
     private void UpdatePuntos()
     {
         puntos+=Time.deltaTime;
-        texto.text = "Puntos: " + puntos.ToString("0");
+        // texto.text = "Puntos: " + puntos.ToString("0");
+        texto.text = puntos.ToString("0");
     }
 
     private void OnTriggerExit(Collider other)

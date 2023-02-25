@@ -33,14 +33,12 @@ public class Muerte : MonoBehaviour
             player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
             player.GetComponent<MeshRenderer>().enabled = false;
             trail.SetActive(false);
-            if (muerto){
-                StartCoroutine("WaitASecond");
-            }
+            StartCoroutine("WaitAndLoadGameOver");
         }
     }
-    IEnumerator WaitASecond()
+    IEnumerator WaitAndLoadGameOver()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1f);
         SceneManager.LoadScene("GameOver");
     }
 
