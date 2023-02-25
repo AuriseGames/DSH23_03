@@ -11,6 +11,9 @@ public class Movimiento : MonoBehaviour
     public float velocidad;
     public float puntos;
     public GameObject prefabSuelo;
+    public GameObject prefabRing;
+
+    public AudioClip ring;
 
     private Vector3 offset;
     private float valX;
@@ -26,6 +29,8 @@ public class Movimiento : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        puntos = 0;
+        texto.text = puntos.ToString("0");
         start = false;
         velocidad = 0f;
         offset = camara.transform.position;
@@ -38,10 +43,12 @@ public class Movimiento : MonoBehaviour
 
     void SueloInicial()
     {
-        for (int n = 0; n < 10; n++)
+        for (int n = 0; n < 12; n++)
         {
             valZ += 6.0f;
             GameObject elSuelo = Instantiate(prefabSuelo, new Vector3(valX, 0.0f, valZ), Quaternion.identity) as GameObject;
+            GameObject ring = Instantiate(prefabRing, new Vector3(valX, 4.0f, valZ), prefabRing.transform.rotation) as GameObject;
+            ring.transform.parent = elSuelo.transform;
         }
     }
 
@@ -49,8 +56,8 @@ public class Movimiento : MonoBehaviour
     void Update()
     {
         camara.transform.position = this.transform.position + offset;
-        UpdatePuntos();
-        if (Input.GetKeyUp(KeyCode.Space))
+        // UpdatePuntos();
+        if (start && Input.GetKeyUp(KeyCode.Space))
         {
             if (direccionActual == Vector3.forward)
                 direccionActual = Vector3.right;
@@ -71,20 +78,29 @@ public class Movimiento : MonoBehaviour
         }
     }
 
+    // private void UpdatePuntos()
+    // {
+    //     puntos += Time.deltaTime;
+    //     // texto.text = "Puntos: " + puntos.ToString("0");
+    //     texto.text = puntos.ToString("0");
+    // }
 
-
-    private void UpdatePuntos()
-    {
-        puntos+=Time.deltaTime;
-        // texto.text = "Puntos: " + puntos.ToString("0");
-        texto.text = puntos.ToString("0");
+    private void OnTriggerEnter(Collider other) {
+        if(other.gameObject.tag == "ring")
+        {
+            AudioSource.PlayClipAtPoint(ring, transform.position, 100.0f);
+            Destroy(other.gameObject);
+            velocidad += 0.1f;
+            puntos += 1;
+            texto.text = puntos.ToString("0");
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.tag == "suelo")
         {
-            velocidad += 0.1f;
+            // velocidad += 0.1f;
             //Obtenemos un numero aleatorio entre 0 y 2
             int num = Random.Range(0, 2);
             //Segun el numero aleatorio, cambiamos la posicion del suelo
@@ -100,6 +116,12 @@ public class Movimiento : MonoBehaviour
             contadorSuelosSeguidos--;
             valZ += 6.0f;
             GameObject elSuelo = Instantiate(prefabSuelo, new Vector3(valX, 0.0f, valZ), Quaternion.identity) as GameObject;
+            num = Random.Range(0, 2);
+            if (num == 0)
+            {
+                GameObject ring = Instantiate(prefabRing, new Vector3(valX, 4.0f, valZ), prefabRing.transform.rotation) as GameObject;
+                ring.transform.parent = elSuelo.transform;
+            }
             other.gameObject.GetComponent<Rigidbody>().useGravity = true;
             other.gameObject.GetComponent<Rigidbody>().isKinematic = false;
             Destroy(other.gameObject, 2.0f);

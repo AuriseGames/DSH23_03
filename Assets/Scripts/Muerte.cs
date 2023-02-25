@@ -9,6 +9,10 @@ public class Muerte : MonoBehaviour
     private GameObject player;
     public GameObject explosion;
     public GameObject trail;
+
+    public GameObject sonicDeath;
+    public AudioSource jukebox;
+
     private int groundControl;
     private bool muerto;
 
@@ -23,6 +27,8 @@ public class Muerte : MonoBehaviour
     {
         if (groundControl == 0 && !muerto)
         {
+            sonicDeath.SetActive(true);
+            sonicDeath.GetComponent<Rigidbody>().AddForce(Vector3.up * 200f);
             muerto = true;
             Debug.Log("Muerto");
             explosion.GetComponent<ParticleSystem>().Play();
@@ -33,6 +39,7 @@ public class Muerte : MonoBehaviour
             player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
             player.GetComponent<MeshRenderer>().enabled = false;
             trail.SetActive(false);
+            jukebox.Stop();
             StartCoroutine("WaitAndLoadGameOver");
         }
     }
