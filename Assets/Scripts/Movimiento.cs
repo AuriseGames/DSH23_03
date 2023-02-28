@@ -90,7 +90,7 @@ public class Movimiento : MonoBehaviour
         {
             AudioSource.PlayClipAtPoint(ring, transform.position, 100.0f);
             Destroy(other.gameObject);
-            velocidad += 0.1f;
+            velocidad += 0.5f;
             puntos += 1;
             texto.text = puntos.ToString("0");
         }
